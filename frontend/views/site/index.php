@@ -2,28 +2,28 @@
 
 /* @var $this yii\web\View */
 
-use yii\helpers\Html;
+use yii\helpers\StringHelper;
 use yii\helpers\Url;
-use common\models\Post;
 
 $this->title = 'My Yii Application';
 ?>
 
 
 <div class="d-flex flex-wrap">
-    <?php foreach ($varInView as $item): ?>
+    <?php foreach ($varInView as $post): ?>
     <div class="post-preview">
-        <a href="<?= Url::toRoute(['site/view', 'id'=>$post->id]); ?>">
+        <a href="<?= Url::toRoute(['site/view', 'id'=>$post->id]);?>">
             <h2 class="post-title">
-                <?php print $item->header ?>
+                <?php print $post->header ?>
             </h2>
             <h3 class="post-subtitle">
-                <?php print $item->body ?>
+                <?php print StringHelper::truncate($post->body,150,'...'); ?>
             </h3>
         </a>
         <p class="post-meta">
-            Просмотры: <?php print $item->views ?><br>
-            Рейтинг: <?php print $item->rating ?>
+
+            Просмотры: <?php print $post->views ?><br>
+            Рейтинг: <?php print $post->rating ?>
         </p>
     </div>
     <?php endforeach ?>

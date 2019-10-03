@@ -5,8 +5,10 @@ use common\models\Post;
 
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
+use function var_dump;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\db\Expression;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -16,6 +18,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\UploadedFile;
 
 /**
  * Site controller
@@ -262,14 +265,56 @@ class SiteController extends Controller
         ]);
     }
 
+    //счетчик просмотров статьи.
     public function actionView($id)
     {
         $post = Post::findOne($id);
+        $post->updateCounters(['views' => 1]);
 
         return $this->render('view', [
             'post'=>$post
         ]);
     }
 
+    //система лайков
+    public function actionLike($id)
+    {
+        $post = Post::findOne($id);
+
+        // UPDATE (table name, column values, condition)
+
+        var_dump(Yii::$app->db->createCommand()->update('post', ['rating' => 1])->execute());
+
+        return $this->render('view', [
+            'post'=>$post
+        ]);
+    }
+
+    //система дизлайков
+    public function actionDislike($id)
+    {
+        $post = Post::findOne($id);
+
+        Post::updateAll(['rating' => new Expression('rating - 1')], ['id' => $post]);
+        return $this->render('view', [
+            'post'=>$post
+        ]);
+    }
+
+    //Загрузка изображжения.
+   /* public function actionUpload()
+    {
+        $model = new Post();
+
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return;
+            }
+        }
+
+        return $this->render('upload', ['model' => $model]);
+    }*/
 
 }

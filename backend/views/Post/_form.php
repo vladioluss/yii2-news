@@ -10,21 +10,18 @@ use yii\widgets\ActiveForm;
 
 <div class="post-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
 
-    <?= $form->field($model, 'header')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'header')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'body')->textarea(['rows' => 6]) ?>
+        <?//= $form->field($model, 'imageFile')->fileInput() ?>
 
-    <?= $form->field($model, 'body')->textarea(['rows' => 6]) ?>
+        <?//= $form->field($model, 'views')->textInput() ?>
+        <?//= $form->field($model, 'rating')->textInput() ?>
 
-    <?= $form->field($model, 'img')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'views')->textInput() ?>
-
-    <?= $form->field($model, 'rating')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
-    </div>
+        <div class="form-group">
+            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        </div>
 
     <?php ActiveForm::end(); ?>
 

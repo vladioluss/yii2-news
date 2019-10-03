@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\StringHelper;
+
+use common\models\Post;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -25,7 +28,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'header',
-            'body:ntext',
+            [
+                'attribute'=>'body',
+                'label'=>'Текст',
+                'value'=>function($post){
+                    return StringHelper::truncate($post->body,200,'...');
+                },
+            ],
             'img:ntext',
             'views',
             'rating',

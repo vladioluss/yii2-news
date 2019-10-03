@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "post".
@@ -20,6 +21,12 @@ use yii\db\ActiveRecord;
  */
 class Post extends ActiveRecord
 {
+
+    /**
+     * @var UploadedFile
+     */
+    //public $imageFile;
+
     /**
      * {@inheritdoc}
      */
@@ -38,6 +45,7 @@ class Post extends ActiveRecord
             [['body', 'img'], 'string'],
             [['views', 'rating'], 'integer'],
             [['header'], 'string', 'max' => 20],
+            //[['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'], //image file
         ];
     }
 
@@ -50,7 +58,7 @@ class Post extends ActiveRecord
             'id' => 'ID',
             'header' => 'Заголовок',
             'body' => 'Текст',
-            'img' => 'Изображение',
+            //'img' => 'Изображение',
             'views' => 'Просмотры',
             'rating' => 'Рейтинг',
         ];
@@ -80,5 +88,15 @@ class Post extends ActiveRecord
         return $post;
     }
 
+    //загрузка изображения.
+    /*public function upload()
+    {
+        if ($this->validate()) {
+            $this->imageFile->saveAs('@frontend/uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            return true;
+        } else {
+            return false;
+        }
+    }*/
 
 }

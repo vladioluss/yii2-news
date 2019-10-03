@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "comments".
@@ -13,7 +15,7 @@ use Yii;
  *
  * @property Post $news0
  */
-class Comments extends \yii\db\ActiveRecord
+class Comments extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -47,7 +49,7 @@ class Comments extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getNews0()
     {
