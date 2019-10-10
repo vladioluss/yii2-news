@@ -21,12 +21,6 @@ use yii\web\UploadedFile;
  */
 class Post extends ActiveRecord
 {
-
-    /**
-     * @var UploadedFile
-     */
-    //public $imageFile;
-
     /**
      * {@inheritdoc}
      */
@@ -45,7 +39,6 @@ class Post extends ActiveRecord
             [['body', 'img'], 'string'],
             [['views', 'rating'], 'integer'],
             [['header'], 'string', 'max' => 20],
-            //[['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'], //image file
         ];
     }
 
@@ -58,7 +51,6 @@ class Post extends ActiveRecord
             'id' => 'ID',
             'header' => 'Заголовок',
             'body' => 'Текст',
-            //'img' => 'Изображение',
             'views' => 'Просмотры',
             'rating' => 'Рейтинг',
         ];
@@ -87,16 +79,4 @@ class Post extends ActiveRecord
         $post = Post::find()->all();
         return $post;
     }
-
-    //загрузка изображения.
-    /*public function upload()
-    {
-        if ($this->validate()) {
-            $this->imageFile->saveAs('@frontend/uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
-            return true;
-        } else {
-            return false;
-        }
-    }*/
-
 }

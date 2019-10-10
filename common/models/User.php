@@ -213,7 +213,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /*
-     * Проверка на админа.
+     * Проверка на админа
      */
     public static function isUserAdmin($username)
     {

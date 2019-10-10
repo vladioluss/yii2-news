@@ -1,14 +1,15 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\Comments;
 use common\models\Post;
 
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
+use function print_r;
 use function var_dump;
 use Yii;
 use yii\base\InvalidArgumentException;
-use yii\db\Expression;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -18,7 +19,6 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
-use yii\web\UploadedFile;
 
 /**
  * Site controller
@@ -81,7 +81,7 @@ class SiteController extends Controller
     {
         //return $this->render('index');
         $post = Post::getAll();
-        return $this->render('index',['varInView' => $post]);
+        return $this->render('index',['varInView' => $post,]);
     }
 
     /**
@@ -271,8 +271,10 @@ class SiteController extends Controller
         $post = Post::findOne($id);
         $post->updateCounters(['views' => 1]);
 
+        //$comments = Comments::findOne($id);
+
         return $this->render('view', [
-            'post'=>$post
+            'post' => $post,
         ]);
     }
 
@@ -280,13 +282,10 @@ class SiteController extends Controller
     public function actionLike($id)
     {
         $post = Post::findOne($id);
-
-        // UPDATE (table name, column values, condition)
-
-        var_dump(Yii::$app->db->createCommand()->update('post', ['rating' => 1])->execute());
-
+        $post->updateCounters(['rating' => 1]);
+        $post->save();
         return $this->render('view', [
-            'post'=>$post
+            'post' => $post,
         ]);
     }
 
@@ -294,27 +293,38 @@ class SiteController extends Controller
     public function actionDislike($id)
     {
         $post = Post::findOne($id);
+        $post->updateCounters(['rating' => -1]);
+        $post->save();
 
-        Post::updateAll(['rating' => new Expression('rating - 1')], ['id' => $post]);
         return $this->render('view', [
             'post'=>$post
         ]);
     }
 
-    //Загрузка изображжения.
-   /* public function actionUpload()
-    {
-        $model = new Post();
+    //public $comments;
+/*    public function actionComm($id) {
+        $comments = new Comments();
+        $comments = Comments::find();
 
-        if (Yii::$app->request->isPost) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload()) {
-                // file is uploaded successfully
-                return;
-            }
-        }
+        Yii::$app->db->createCommand('INSERT INTO `comments` (`news`,`text`) VALUES (:news,:text)', [
+            ':news' => $id,
+            ':text' => '1',
+        ])->execute();
 
-        return $this->render('upload', ['model' => $model]);
-    }*/
+        return $this->render('view', [
+           'model'=>$comments
+       ]);
+   }*/
+
+   public function actionTest()
+   {
+        $comments = new Comments();
+
+       if (Yii::$app->request->isPost) {
+           if ($comments->load(Yii::$app->request->post()) && $comments->validate()) {
+               $comments->save();
+           }
+       }
+   }
 
 }

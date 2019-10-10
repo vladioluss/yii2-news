@@ -5,9 +5,8 @@
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
-$this->title = 'My Yii Application';
+$this->title = 'News';
 ?>
-
 
 <div class="d-flex flex-wrap">
     <?php foreach ($varInView as $post): ?>
@@ -17,7 +16,7 @@ $this->title = 'My Yii Application';
                 <?php print $post->header ?>
             </h2>
             <h3 class="post-subtitle">
-                <?php print StringHelper::truncate($post->body,150,'...'); ?>
+                <?php print StringHelper::truncate($post->body,70,'...'); ?>
             </h3>
         </a>
         <p class="post-meta">

@@ -6,17 +6,11 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
-/**
- * This is the model class for table "comments".
- *
- * @property int $id
- * @property int $news
- * @property int $text
- *
- * @property Post $news0
- */
 class Comments extends ActiveRecord
 {
+    public $news;
+    public $text;
+
     /**
      * {@inheritdoc}
      */
@@ -31,7 +25,8 @@ class Comments extends ActiveRecord
     public function rules()
     {
         return [
-            [['news', 'text'], 'integer'],
+            [['news'], 'integer'],
+            [['text'], 'string'],
             [['news'], 'exist', 'skipOnError' => true, 'targetClass' => Post::className(), 'targetAttribute' => ['news' => 'id']],
         ];
     }
@@ -43,15 +38,15 @@ class Comments extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'news' => 'News',
-            'text' => 'Text',
+            'news' => 'Запись',
+            'text' => 'Текст',
         ];
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getNews0()
+    public function getNews()
     {
         return $this->hasOne(Post::className(), ['id' => 'news']);
     }
