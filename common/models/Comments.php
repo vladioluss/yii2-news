@@ -6,11 +6,19 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
+/**
+ * This is the model class for table "comments".
+ *
+ * @property int $id
+ * @property int $news
+ * @property string $text
+ *
+ * @property Post $news0
+ *
+ **/
+
 class Comments extends ActiveRecord
 {
-    public $news;
-    public $text;
-
     /**
      * {@inheritdoc}
      */
@@ -59,4 +67,15 @@ class Comments extends ActiveRecord
     {
         return new CommentsQuery(get_called_class());
     }
+
+    public static function getComments($id)
+    {
+        $comments = Comments::find()  //вывод комментов
+            ->where(['news' => $id])
+            ->all();
+        return $comments;
+    }
+
+
+
 }

@@ -1,15 +1,18 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\CommentForm;
 use common\models\Comments;
 use common\models\Post;
 
+use function debug_backtrace;
+
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
-use function print_r;
 use function var_dump;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\helpers\Html;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -22,6 +25,7 @@ use frontend\models\ContactForm;
 
 /**
  * Site controller
+ * @property mixed news
  */
 class SiteController extends Controller
 {
@@ -79,9 +83,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        //return $this->render('index');
         $post = Post::getAll();
-        return $this->render('index',['varInView' => $post,]);
+        return $this->render('index',['varInView' => $post]);
     }
 
     /**
@@ -269,14 +272,27 @@ class SiteController extends Controller
     public function actionView($id)
     {
         $post = Post::findOne($id);
-        $post->updateCounters(['views' => 1]);
+        $post->updateCounters(['views' => 1]); //view+1
 
-        //$comments = Comments::findOne($id);
+        $comments = new Comments();
+        $comments = Comments::getComments($id); //комментарии
+
+        $model = new CommentForm();
+        $model->news = $id;
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /*if ($model->save()) {
+                //var_dump($model->text);die;
+            }*/
+        }
+        //var_dump($model);die;
 
         return $this->render('view', [
             'post' => $post,
+            'comments' => $comments,
+            'model' => $model,
         ]);
     }
+
 
     //система лайков
     public function actionLike($id)
@@ -300,31 +316,5 @@ class SiteController extends Controller
             'post'=>$post
         ]);
     }
-
-    //public $comments;
-/*    public function actionComm($id) {
-        $comments = new Comments();
-        $comments = Comments::find();
-
-        Yii::$app->db->createCommand('INSERT INTO `comments` (`news`,`text`) VALUES (:news,:text)', [
-            ':news' => $id,
-            ':text' => '1',
-        ])->execute();
-
-        return $this->render('view', [
-           'model'=>$comments
-       ]);
-   }*/
-
-   public function actionTest()
-   {
-        $comments = new Comments();
-
-       if (Yii::$app->request->isPost) {
-           if ($comments->load(Yii::$app->request->post()) && $comments->validate()) {
-               $comments->save();
-           }
-       }
-   }
 
 }
