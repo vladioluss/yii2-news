@@ -26,14 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             Просмотры: <?php print $post->views ?>
             <div class="my-class">
-                <div>
-                    <?= Html::a('+', ['site/like', 'id'=>$post->id], ['class' => 'btn btn-sm btn-primary', 'id' => 'like']) ?>
-                    <div id="rating">Рейтинг: <?php print $post->rating ?></div>
-                    <?= Html::a('-', ['site/dislike', 'id'=>$post->id], ['class' => 'btn btn-sm btn-warning', 'id' => 'dislike']) ?>
-                </div>
+                <?= Html::a('+', ['site/like', 'id'=>$post->id], ['class' => 'btn btn-sm btn-primary', 'id' => 'like']) ?>
+                <div id="rating">Рейтинг: <?php print $post->rating ?></div>
+                <?= Html::a('-', ['site/dislike', 'id'=>$post->id], ['class' => 'btn btn-sm btn-warning', 'id' => 'dislike']) ?>
             </div>
-
-
 
             <?php Pjax::begin([
                 'id'                 => 'pjax2',
@@ -47,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php ActiveForm::end();?>
 
             <?php $dataProvider = new ActiveDataProvider([
-                'query' => Comments::find()->where(['news'=>$model->news]),
+                'query' => Comments::find()->where(['news'=>$post->id]),
                 'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
                 'pagination' => [
                     'pageSize' => 6,
@@ -67,18 +63,15 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $script = <<<JS
     
-/*$('#like').on('click', function(e) {
-    $.ajax({
-       url: 'site/like',
-       data: {
-           id: 'like'
-       },
-       success: function(data) {
-           
-       }
-    });
-});*/
-
+$('#like').click(function(e) {
+  $.ajax({
+    url: 'site/like',
+    type: 'POST'
+  }).done(function(response) {
+    $('#rating').html(response);
+  });
+});
+   
 
 
     $(document).on('submit', "#pjax2", function (event) {

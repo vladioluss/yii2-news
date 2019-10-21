@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use data;
 use frontend\models\CommentForm;
 use common\models\Comments;
 use common\models\Post;
@@ -268,6 +269,11 @@ class SiteController extends Controller
     }
 
     //счетчик просмотров статьи.
+
+    /**
+     * @param $id
+     * @return string
+     */
     public function actionView($id)
     {
         $post = Post::findOne($id);
@@ -284,7 +290,7 @@ class SiteController extends Controller
         //var_dump($model);die;
 
         /*$dataProvider = new ActiveDataProvider([
-            'query' => Comments::find()->where(['news'=>$model->news]),
+            'query' => Comments::find()->where(['news'=>$post->id]),
             'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
             'pagination' => [
                 'pageSize' => 6,
@@ -295,7 +301,7 @@ class SiteController extends Controller
             'post' => $post,
             'comments' => $comments,
             'model' => $model,
-            //'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
