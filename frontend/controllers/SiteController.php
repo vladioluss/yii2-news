@@ -5,14 +5,13 @@ use frontend\models\CommentForm;
 use common\models\Comments;
 use common\models\Post;
 
-use function debug_backtrace;
-
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use function var_dump;
 use Yii;
 use yii\base\InvalidArgumentException;
-use yii\helpers\Html;
+use yii\web\Response;
+use yii\data\ActiveDataProvider;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -280,16 +279,23 @@ class SiteController extends Controller
         $model = new CommentForm();
         $model->news = $id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            /*if ($model->save()) {
-                //var_dump($model->text);die;
-            }*/
+            //var_dump($model->text);die;
         }
         //var_dump($model);die;
+
+        /*$dataProvider = new ActiveDataProvider([
+            'query' => Comments::find()->where(['news'=>$model->news]),
+            'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+            'pagination' => [
+                'pageSize' => 6,
+            ],
+        ]);*/
 
         return $this->render('view', [
             'post' => $post,
             'comments' => $comments,
             'model' => $model,
+            //'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -297,11 +303,18 @@ class SiteController extends Controller
     //система лайков
     public function actionLike($id)
     {
+        $model = new CommentForm();
         $post = Post::findOne($id);
-        $post->updateCounters(['rating' => 1]);
-        $post->save();
+
+        //if (Yii::$app->request->isAjax) {
+            $post->updateCounters(['rating' => 1]);
+            $post->save();
+            //Yii::$app->response->format = Response::FORMAT_JSON;
+        //}
+
         return $this->render('view', [
             'post' => $post,
+            'model' => $model,
         ]);
     }
 
