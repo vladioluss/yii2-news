@@ -62,16 +62,32 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $script = <<<JS
-    
-$('#like').click(function(e) {
-  $.ajax({
-    url: 'site/like',
-    type: 'POST'
-  }).done(function(response) {
-    $('#rating').html(response);
-  });
+
+/*$('#like').click(function() {  
+    $.ajax({  
+        url: "site/like",  
+        cache: false,  
+        //data: '',
+        success: function(data) {  
+            $("#rating").html(data);
+        }
+    });  
+    return false;
+}); */ 
+
+$("#like").click(function (e) {
+    // тут прерываем текущее действие
+    e.preventDefault(e);
+    $.ajax({
+        url: "site/like",
+        type: "GET",
+        cache: false,
+        data: $('like').serialize(),
+        success: function (data) {
+            $('#rating').html(data);
+        }
+    });
 });
-   
 
 
     $(document).on('submit', "#pjax2", function (event) {
